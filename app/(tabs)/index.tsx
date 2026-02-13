@@ -7,6 +7,7 @@ import { useAuth, useGenderPreference, useCountry, COUNTRY_LABELS } from '@/stor
 import { useNames, useRecommendations, useNamesOfTheDay } from '@/hooks/useNames';
 import { analytics } from '@/services/analytics';
 import GenderToggle from '@/components/GenderToggle';
+import CountryPicker from '@/components/CountryPicker';
 import { FadeIn, Skeleton } from '@/components/Animated';
 
 export default function DiscoverScreen() {
@@ -52,6 +53,11 @@ export default function DiscoverScreen() {
         {/* Gender Toggle */}
         <View style={{ marginTop: 16 }}>
           <GenderToggle />
+        </View>
+
+        {/* Country Picker */}
+        <View style={{ marginTop: 12 }}>
+          <CountryPicker />
         </View>
       </LinearGradient>
 

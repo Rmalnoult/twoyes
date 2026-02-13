@@ -12,11 +12,14 @@ export default function ProfileScreen() {
   const signOut = useSignOut();
 
   const handleChangeCountry = () => {
-    const countries: Country[] = ['US', 'FR', 'UK'];
-    const options = countries.map((c) => COUNTRY_LABELS[c]);
+    const countries: Country[] = ['US', 'FR', 'UK', 'DE', 'ES', 'IT'];
+    const flags: Record<Country, string> = {
+      US: '\u{1F1FA}\u{1F1F8}', FR: '\u{1F1EB}\u{1F1F7}', UK: '\u{1F1EC}\u{1F1E7}',
+      DE: '\u{1F1E9}\u{1F1EA}', ES: '\u{1F1EA}\u{1F1F8}', IT: '\u{1F1EE}\u{1F1F9}',
+    };
     Alert.alert('Select Country', 'Choose your country for name rankings', [
       ...countries.map((c) => ({
-        text: `${c === 'US' ? '\u{1F1FA}\u{1F1F8}' : c === 'FR' ? '\u{1F1EB}\u{1F1F7}' : '\u{1F1EC}\u{1F1E7}'} ${COUNTRY_LABELS[c]}`,
+        text: `${flags[c]} ${COUNTRY_LABELS[c]}`,
         onPress: () => setCountry(c),
       })),
       { text: 'Cancel', style: 'cancel' as const },
