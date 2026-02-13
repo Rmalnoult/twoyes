@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "TwoYes",
+    "slug": "twoyes",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "scheme": "twoyes",
+    "owner": "romainmalnoult",
+    "extra": {
+      "eas": {
+        "projectId": "bf537dd1-71a6-45a1-a0c9-a93e9088bf4d"
+      }
+    },
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FAF8FC"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.twoyes.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "TwoYes does not use the camera.",
+        "NSPhotoLibraryUsageDescription": "TwoYes does not access your photo library.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.twoyes.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FAF8FC"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}
