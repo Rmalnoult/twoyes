@@ -32,11 +32,6 @@ export type AnalyticsEvent =
   | 'partner_invite_sent'
   | 'partner_invite_accepted'
   | 'partner_connected'
-  // Premium events
-  | 'premium_screen_viewed'
-  | 'subscription_started'
-  | 'subscription_completed'
-  | 'subscription_cancelled'
   // AI events
   | 'recommendations_viewed'
   | 'recommendation_clicked'
@@ -143,12 +138,3 @@ export const trackNameAction = (
 export const trackMatch = (nameId: string, nameName: string) =>
   analytics.track('match_created', { nameId, name: nameName });
 
-export const trackPremium = (action: 'viewed' | 'started' | 'completed', plan?: string) => {
-  if (action === 'viewed') {
-    analytics.track('premium_screen_viewed');
-  } else if (action === 'started') {
-    analytics.track('subscription_started', { plan });
-  } else {
-    analytics.track('subscription_completed', { plan });
-  }
-};

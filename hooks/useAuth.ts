@@ -116,6 +116,30 @@ export function useSignOut() {
   });
 }
 
+// Delete account
+export function useDeleteAccount() {
+  const queryClient = useQueryClient();
+  const logout = useStore((state) => state.logout);
+
+  return useMutation({
+    mutationFn: async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Not authenticated');
+
+      const { data, error } = await supabase.functions.invoke('delete-account', {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+    },
+    onSuccess: () => {
+      logout();
+      queryClient.clear();
+    },
+  });
+}
+
 // Update user profile
 export function useUpdateProfile() {
   const queryClient = useQueryClient();

@@ -95,27 +95,7 @@ async function verifySetup() {
     check('Vector Search', 'failed', String(error));
   }
 
-  // 5. Check subscription plans
-  try {
-    const { data, error } = await supabase
-      .from('subscription_plans')
-      .select('name');
-
-    if (error) throw error;
-
-    const plans = data?.map(p => p.name) || [];
-    const hasRequired = plans.includes('free') && plans.includes('premium');
-
-    if (hasRequired) {
-      check('Subscription Plans', 'passed', `Plans: ${plans.join(', ')}`);
-    } else {
-      check('Subscription Plans', 'failed', `Missing required plans. Found: ${plans.join(', ')}`);
-    }
-  } catch (error) {
-    check('Subscription Plans', 'failed', String(error));
-  }
-
-  // 6. Check profiles table structure
+  // 5. Check profiles table structure
   try {
     const { data, error } = await supabase
       .from('profiles')
@@ -128,13 +108,13 @@ async function verifySetup() {
     check('Profiles Table', 'failed', String(error));
   }
 
-  // 7. Check RLS policies
+  // 6. Check RLS policies
   try {
     const { data: anonTest, error } = await createClient(
       supabaseUrl,
       process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!
     )
-      .from('subscription_plans')
+      .from('names')
       .select('name')
       .limit(1);
 
@@ -148,7 +128,7 @@ async function verifySetup() {
     check('Row Level Security', 'failed', String(error));
   }
 
-  // 8. Check environment variables
+  // 7. Check environment variables
   const requiredEnvVars = [
     'EXPO_PUBLIC_SUPABASE_URL',
     'EXPO_PUBLIC_SUPABASE_ANON_KEY',

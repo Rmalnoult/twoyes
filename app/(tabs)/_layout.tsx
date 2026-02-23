@@ -1,9 +1,13 @@
 import { Tabs } from 'expo-router';
 import { View, StyleSheet, Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Home, Search, Heart, User, Shuffle } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function TabsLayout() {
+  const insets = useSafeAreaInsets();
+  const tabBottom = Math.max(insets.bottom - 16, 4);
+
   return (
     <Tabs
       screenOptions={{
@@ -18,7 +22,7 @@ export default function TabsLayout() {
         },
         tabBarStyle: {
           position: 'absolute',
-          bottom: Platform.OS === 'ios' ? 24 : 16,
+          bottom: tabBottom,
           left: 20,
           right: 20,
           height: 64,
@@ -103,12 +107,6 @@ export default function TabsLayout() {
               <User color={color} size={22} strokeWidth={focused ? 2.5 : 2} />
             </View>
           ),
-        }}
-      />
-      <Tabs.Screen
-        name="premium"
-        options={{
-          href: null,
         }}
       />
       <Tabs.Screen

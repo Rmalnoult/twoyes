@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { ArrowLeft, Mail, Lock, User, Eye, EyeOff } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSignUp } from '@/hooks/useAuth';
+import { signInWithApple, signInWithGoogle } from '@/services/social-auth';
 
 export default function SignUpScreen() {
   const [name, setName] = useState('');
@@ -15,7 +16,39 @@ export default function SignUpScreen() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [successMessage, setSuccessMessage] = useState('');
 
+  const [socialLoading, setSocialLoading] = useState<'apple' | 'google' | null>(null);
+
   const signUp = useSignUp();
+
+  const handleAppleSignIn = async () => {
+    setSocialLoading('apple');
+    try {
+      const { data, error } = await signInWithApple();
+      if (error) {
+        Alert.alert('Apple Sign-In Failed', String(error.message || error) || 'An unexpected error occurred. Please try again.');
+      }
+      // Navigation handled by AuthProvider when session changes
+    } catch (e: any) {
+      Alert.alert('Apple Sign-In Failed', String(e.message || e) || 'An unexpected error occurred. Please try again.');
+    } finally {
+      setSocialLoading(null);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setSocialLoading('google');
+    try {
+      const { data, error } = await signInWithGoogle();
+      if (error) {
+        Alert.alert('Google Sign-In Failed', String(error.message || error) || 'An unexpected error occurred. Please try again.');
+      }
+      // Navigation handled by AuthProvider when session changes
+    } catch (e: any) {
+      Alert.alert('Google Sign-In Failed', String(e.message || e) || 'An unexpected error occurred. Please try again.');
+    } finally {
+      setSocialLoading(null);
+    }
+  };
 
   const handleSignUp = async () => {
     const newErrors: Record<string, string> = {};
@@ -190,12 +223,12 @@ export default function SignUpScreen() {
           </View>
 
           {/* Social Auth Buttons */}
-          <TouchableOpacity style={s.appleBtn} activeOpacity={0.8}>
-            <Text style={s.appleBtnText}>Sign up with Apple</Text>
+          <TouchableOpacity style={s.appleBtn} activeOpacity={0.8} onPress={handleAppleSignIn} disabled={socialLoading === 'apple'}>
+            <Text style={s.appleBtnText}>{socialLoading === 'apple' ? 'Signing in...' : 'Sign up with Apple'}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={s.googleBtn} activeOpacity={0.7}>
-            <Text style={s.googleBtnText}>Sign up with Google</Text>
+          <TouchableOpacity style={s.googleBtn} activeOpacity={0.7} onPress={handleGoogleSignIn} disabled={socialLoading === 'google'}>
+            <Text style={s.googleBtnText}>{socialLoading === 'google' ? 'Signing in...' : 'Sign up with Google'}</Text>
           </TouchableOpacity>
         </View>
 

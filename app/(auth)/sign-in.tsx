@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { ArrowLeft, Mail, Lock, Eye, EyeOff } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSignIn } from '@/hooks/useAuth';
+import { signInWithApple, signInWithGoogle } from '@/services/social-auth';
 
 export default function SignInScreen() {
   const [email, setEmail] = useState('');
@@ -11,7 +12,39 @@ export default function SignInScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [socialLoading, setSocialLoading] = useState<'apple' | 'google' | null>(null);
+
   const signIn = useSignIn();
+
+  const handleAppleSignIn = async () => {
+    setSocialLoading('apple');
+    try {
+      const { data, error } = await signInWithApple();
+      if (error) {
+        Alert.alert('Apple Sign-In Failed', String(error.message || error) || 'An unexpected error occurred. Please try again.');
+      }
+      // Navigation handled by AuthProvider when session changes
+    } catch (e: any) {
+      Alert.alert('Apple Sign-In Failed', String(e.message || e) || 'An unexpected error occurred. Please try again.');
+    } finally {
+      setSocialLoading(null);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setSocialLoading('google');
+    try {
+      const { data, error } = await signInWithGoogle();
+      if (error) {
+        Alert.alert('Google Sign-In Failed', String(error.message || error) || 'An unexpected error occurred. Please try again.');
+      }
+      // Navigation handled by AuthProvider when session changes
+    } catch (e: any) {
+      Alert.alert('Google Sign-In Failed', String(e.message || e) || 'An unexpected error occurred. Please try again.');
+    } finally {
+      setSocialLoading(null);
+    }
+  };
 
   const handleSignIn = async () => {
     if (!email || !password) {
@@ -118,12 +151,12 @@ export default function SignInScreen() {
           </View>
 
           {/* Social Auth Buttons */}
-          <TouchableOpacity style={s.appleBtn} activeOpacity={0.8}>
-            <Text style={s.appleBtnText}>Continue with Apple</Text>
+          <TouchableOpacity style={s.appleBtn} activeOpacity={0.8} onPress={handleAppleSignIn} disabled={socialLoading === 'apple'}>
+            <Text style={s.appleBtnText}>{socialLoading === 'apple' ? 'Signing in...' : 'Continue with Apple'}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={s.googleBtn} activeOpacity={0.7}>
-            <Text style={s.googleBtnText}>Continue with Google</Text>
+          <TouchableOpacity style={s.googleBtn} activeOpacity={0.7} onPress={handleGoogleSignIn} disabled={socialLoading === 'google'}>
+            <Text style={s.googleBtnText}>{socialLoading === 'google' ? 'Signing in...' : 'Continue with Google'}</Text>
           </TouchableOpacity>
         </View>
 

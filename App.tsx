@@ -42,7 +42,6 @@ export default function App() {
           <Text style={styles.feature}>✅ AI-powered recommendations</Text>
           <Text style={styles.feature}>✅ Robust error handling & offline mode</Text>
           <Text style={styles.feature}>✅ Analytics infrastructure</Text>
-          <Text style={styles.feature}>✅ Premium subscription support</Text>
         </View>
       </View>
 
@@ -83,16 +82,14 @@ export default function App() {
         <Text style={styles.statusNote}>✅ Database: 30 names with AI embeddings</Text>
         <Text style={styles.statusNote}>✅ All migrations applied</Text>
         <Text style={styles.statusNote}>✅ Authentication system ready</Text>
-        <Text style={styles.statusNote}>✅ Premium features implemented</Text>
       </View>
 
       {/* Next Steps */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>🚀 Ready for Launch</Text>
         <Text style={styles.nextStep}>1. Create app icon & screenshots</Text>
-        <Text style={styles.nextStep}>2. Set up Stripe payments</Text>
-        <Text style={styles.nextStep}>3. TestFlight beta testing</Text>
-        <Text style={styles.nextStep}>4. App Store submission</Text>
+        <Text style={styles.nextStep}>2. TestFlight beta testing</Text>
+        <Text style={styles.nextStep}>3. App Store submission</Text>
       </View>
 
       {/* Footer */}

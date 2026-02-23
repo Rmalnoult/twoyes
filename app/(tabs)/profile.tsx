@@ -1,15 +1,51 @@
 import { View, Text, TouchableOpacity, ScrollView, Alert, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
-import { User, Heart, Users, Bell, HelpCircle, LogOut, Crown, ChevronRight, Globe } from 'lucide-react-native';
+import { User, Heart, Users, Bell, HelpCircle, LogOut, Trash2, ChevronRight, Globe } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth, useCountry, COUNTRY_LABELS } from '@/store';
 import type { Country } from '@/store';
-import { useSignOut } from '@/hooks/useAuth';
+import { useSignOut, useDeleteAccount } from '@/hooks/useAuth';
 
 export default function ProfileScreen() {
   const { user, isAuthenticated } = useAuth();
   const { country, setCountry } = useCountry();
   const signOut = useSignOut();
+  const deleteAccount = useDeleteAccount();
+
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      'Delete Account',
+      'This will permanently delete your account and all your data (favorites, swipes, matches). This action cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete Account',
+          style: 'destructive',
+          onPress: () => {
+            Alert.alert(
+              'Are you sure?',
+              'All your data will be permanently deleted.',
+              [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                  text: 'Yes, Delete',
+                  style: 'destructive',
+                  onPress: async () => {
+                    try {
+                      await deleteAccount.mutateAsync();
+                      router.replace('/(auth)/welcome');
+                    } catch (e: any) {
+                      Alert.alert('Error', e.message || 'Failed to delete account. Please try again.');
+                    }
+                  },
+                },
+              ]
+            );
+          },
+        },
+      ]
+    );
+  };
 
   const handleChangeCountry = () => {
     const countries: Country[] = ['US', 'FR', 'UK', 'DE', 'ES', 'IT'];
@@ -65,8 +101,6 @@ export default function ProfileScreen() {
       </View>
     );
   }
-
-  const isPremium = user.premium_tier !== 'free';
 
   const menuItems = [
     {
@@ -129,18 +163,6 @@ export default function ProfileScreen() {
               <Text className="text-white text-sm" style={{ opacity: 0.75 }}>
                 {user.email}
               </Text>
-              <View className="flex-row items-center mt-2">
-                {isPremium ? (
-                  <View style={s.premiumBadge}>
-                    <Crown size={12} color="#ca8a04" />
-                    <Text style={s.premiumText}>Premium</Text>
-                  </View>
-                ) : (
-                  <View style={s.freeBadge}>
-                    <Text style={s.freeText}>Free Plan</Text>
-                  </View>
-                )}
-              </View>
             </View>
             <View style={s.avatar}>
               <Text style={s.avatarText}>
@@ -148,17 +170,6 @@ export default function ProfileScreen() {
               </Text>
             </View>
           </View>
-
-          {!isPremium && (
-            <TouchableOpacity
-              style={s.upgradeBtn}
-              onPress={() => router.push('/(tabs)/premium')}
-              activeOpacity={0.8}
-            >
-              <Crown size={16} color="#ea546c" />
-              <Text style={s.upgradeText}>Upgrade to Premium</Text>
-            </TouchableOpacity>
-          )}
         </LinearGradient>
       </View>
 
@@ -192,6 +203,21 @@ export default function ProfileScreen() {
             <LogOut size={18} color="#ef4444" />
           </View>
           <Text style={s.signOutText}>Sign Out</Text>
+        </TouchableOpacity>
+
+        {/* Delete Account */}
+        <TouchableOpacity
+          style={s.deleteBtn}
+          onPress={handleDeleteAccount}
+          activeOpacity={0.7}
+          disabled={deleteAccount.isPending}
+        >
+          <View style={s.deleteIcon}>
+            <Trash2 size={18} color="#dc2626" />
+          </View>
+          <Text style={s.deleteText}>
+            {deleteAccount.isPending ? 'Deleting...' : 'Delete Account'}
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -235,46 +261,6 @@ const s = StyleSheet.create({
     fontWeight: '700',
     color: '#ffffff',
   },
-  premiumBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 8,
-    gap: 4,
-  },
-  premiumText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#ca8a04',
-  },
-  freeBadge: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 8,
-  },
-  freeText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#ffffff',
-  },
-  upgradeBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ffffff',
-    borderRadius: 14,
-    paddingVertical: 12,
-    gap: 8,
-    marginTop: 4,
-  },
-  upgradeText: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#ea546c',
-  },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -316,6 +302,30 @@ const s = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#ef4444',
+    marginLeft: 12,
+  },
+  deleteBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: 16,
+    marginTop: 4,
+    borderWidth: 1,
+    borderColor: '#fecaca',
+  },
+  deleteIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: '#fef2f2',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  deleteText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#dc2626',
     marginLeft: 12,
   },
   emptyIcon: {

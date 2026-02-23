@@ -14,7 +14,6 @@ export function useInitializeAnalytics() {
       analytics.setUserProperties({
         email: user.email,
         displayName: user.display_name,
-        premiumTier: user.premium_tier,
         hasPartner: !!user.partner_id,
       });
     } else {
