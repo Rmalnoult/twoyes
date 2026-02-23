@@ -7,6 +7,10 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "http://192.168.1.78:54321",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"
+      },
       "ios": {
         "resourceClass": "m-medium"
       },
@@ -16,6 +20,10 @@
     },
     "preview": {
       "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://vrhizwqeztahsoglyddj.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyaGl6d3FlenRhaHNvZ2x5ZGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5NTIxMTEsImV4cCI6MjA4NTUyODExMX0.gUIidPNxcOKu7ai8CgqmoTc5Amtjs7R3Xzta6Sm3Al0"
+      },
       "ios": {
         "simulator": true,
         "resourceClass": "m-medium"
@@ -25,6 +33,11 @@
       }
     },
     "production": {
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://vrhizwqeztahsoglyddj.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyaGl6d3FlenRhaHNvZ2x5ZGRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5NTIxMTEsImV4cCI6MjA4NTUyODExMX0.gUIidPNxcOKu7ai8CgqmoTc5Amtjs7R3Xzta6Sm3Al0"
+      },
       "ios": {
         "resourceClass": "m-medium"
       },
@@ -36,8 +49,11 @@
   "submit": {
     "production": {
       "ios": {
+        "ascApiKeyPath": "./AuthKey_BM3G4KV698.p8",
+        "ascApiKeyIssuerId": "952f35b1-5aff-4d05-827f-2bc78cf79910",
+        "ascApiKeyId": "BM3G4KV698",
         "appleId": "romain.malnoult@gmail.com",
-        "ascAppId": "FILL_AFTER_CREATING_APP_IN_ASC",
+        "ascAppId": "6759161310",
         "appleTeamId": "5HP7WW3SA3"
       },
       "android": {

@@ -16,7 +16,8 @@ import Animated, {
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
 import { useAuth, useGenderPreference, useCountry, COUNTRY_LABELS } from '@/store';
-import { useSwipeDeck, POPULARITY_COLUMN } from '@/hooks/useNames';
+import { useQueryClient } from '@tanstack/react-query';
+import { useSwipeDeck, POPULARITY_COLUMN, nameKeys } from '@/hooks/useNames';
 import GenderToggle from '@/components/GenderToggle';
 import { supabase } from '@/services/supabase';
 import { analytics } from '@/services/analytics';
@@ -133,6 +134,7 @@ export default function SwipeScreen() {
   const { user } = useAuth();
   const { genderPreference } = useGenderPreference();
   const { country } = useCountry();
+  const queryClient = useQueryClient();
   const [currentIndex, setCurrentIndex] = useState(0);
   const isAnimating = useSharedValue(false);
 
@@ -160,7 +162,7 @@ export default function SwipeScreen() {
     translateX.value = 0;
     translateY.value = 0;
     cardScale.value = 1;
-    nextCardProgress.value = 0;
+    nextCardProgress.value = withTiming(0, { duration: 100 });
     isAnimating.value = false;
   }, []);
 
@@ -199,6 +201,11 @@ export default function SwipeScreen() {
         action,
       });
       if (action === 'like' || action === 'super_like') {
+        await supabase.from('user_favorites').upsert(
+          { user_id: user.id, name_id: currentName.id },
+          { onConflict: 'user_id,name_id' }
+        );
+        queryClient.invalidateQueries({ queryKey: [...nameKeys.favorites(), user.id] });
         const { data: matches } = await supabase
           .from('partner_matches')
           .select('*')
@@ -221,7 +228,7 @@ export default function SwipeScreen() {
     } catch (error) {
       console.error('Failed to record swipe:', error);
     }
-  }, [user, names, currentIndex]);
+  }, [user, names, currentIndex, queryClient]);
 
   const onSwipeComplete = useCallback((action: 'like' | 'dislike' | 'super_like') => {
     handleSwipe(action);

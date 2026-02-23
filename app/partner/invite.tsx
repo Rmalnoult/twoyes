@@ -74,7 +74,7 @@ export default function InvitePartnerScreen() {
 
     try {
       await Share.share({
-        message: `Join me on TwoYes to find the perfect baby name together! Use code: ${inviteCode}\n\nDownload: https://twoyes.app`,
+        message: `Join me on TwoYes to find the perfect baby name together! Install the app from TestFlight, then go to Profile → Partner and enter this code:\n\n${inviteCode}`,
         title: 'TwoYes Partner Invite',
       });
     } catch (error) {
@@ -192,6 +192,16 @@ export default function InvitePartnerScreen() {
             code, you'll both see when you match on names you both love!
           </Text>
         </View>
+
+        {/* Have a code? */}
+        <TouchableOpacity
+          className="mt-6"
+          onPress={() => router.push('/partner/accept')}
+        >
+          <Text className="text-center text-primary-600 font-medium">
+            Already have an invite code? Enter it here
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
